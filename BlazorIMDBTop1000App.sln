@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorIMDBTop1000App", "BlazorIMDBTop1000App\BlazorIMDBTop1000App.csproj", "{A149DB97-6A77-40F1-BFA7-32C6DA479447}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A149DB97-6A77-40F1-BFA7-32C6DA479447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A149DB97-6A77-40F1-BFA7-32C6DA479447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A149DB97-6A77-40F1-BFA7-32C6DA479447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A149DB97-6A77-40F1-BFA7-32C6DA479447}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D016616-D7B8-43B6-904F-67AF1EE897BB}
+	EndGlobalSection
+EndGlobal
