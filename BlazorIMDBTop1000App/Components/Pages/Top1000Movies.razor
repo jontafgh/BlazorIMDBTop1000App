@@ -1,0 +1,51 @@
+﻿@page "/top1000movies"
+@rendermode InteractiveServer
+<h3>Top1000Movies</h3>
+
+<table class="table" style="width:70%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Rating</th>
+            <th>Sorter1</th>
+            <th>Show</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in _movies)
+        {
+            <tr>
+                <td><b>@movie.Key.SeriesTitle</b></td>
+                <td>@movie.Key.ReleasedYear.ToString("yyyy")</td>
+                <td>@movie.Key.IMDBRating</td>
+                <td>sorter</td>
+                <td><button type="button" @onclick="() => OnShowClick(movie.Key)">Show</button></td>
+            </tr>
+            @if (ShowMovie(movie.Key))
+            {
+                <tr style="align-content:center">
+                    <td colspan="5"><Top1000Movie CurrentMovie="@movie.Key"></Top1000Movie></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    private Dictionary<Movie, bool> _movies = new Dictionary<Movie, bool>();
+
+    protected override void OnInitialized()
+    {
+        MovieCsvDataAccess movieCsvDataAccess = new MovieCsvDataAccess();
+        _movies = movieCsvDataAccess.GetImdbTop1000Movies();
+    }
+    private void OnShowClick(Movie movie)
+    {
+        _movies[movie] = (_movies[movie]) ? false : true;
+    }
+    private bool ShowMovie(Movie movie)
+    {
+        return _movies[movie];
+    }
+}

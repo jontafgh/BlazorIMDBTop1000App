@@ -1,0 +1,40 @@
+﻿@using System.Globalization;
+<style>
+    p{
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+</style>
+<div class="d-md-block" style="vertical-align:top;margin-bottom:10px;margin-top:10px">
+    <img src="@CurrentMovie.PosterLink" style="margin-bottom:10px" /><br />
+    <span><p>@CurrentMovie.Genre</p></span>
+    <span >"@CurrentMovie.Overview"</span>
+</div>
+<div class="d-inline-block" style="margin-right:10px">
+    <h5><b>Director</b></h5>
+    <p style="font-weight:normal">@CurrentMovie.Director</p>
+    <p>Main Actors</p>
+    <span>@CurrentMovie.Star1</span><br />
+    <span>@CurrentMovie.Star2</span><br />
+    <span>@CurrentMovie.Star3</span><br />
+    <span>@CurrentMovie.Star4</span><br />
+</div>
+<div class="d-inline-block" style="margin-right:10px">
+    <p>Info</p>
+    <span>Release Year: @CurrentMovie.ReleasedYear.ToString("yyyy")</span><br />
+    <span>Genre: @CurrentMovie.Genre</span><br />
+    <span>Runtime: @CurrentMovie.Runtime</span><br />
+    <span>Certificate: @CurrentMovie.Certificate</span><br />
+</div>
+<div class="d-inline-block" style="margin-right:10px">
+    <p>Numbers</p>
+    <span>Number of votes: @CurrentMovie.NoofVotes</span><br />
+    <span>IMDB Rating: @CurrentMovie.IMDBRating</span><br />
+    <span>Metascore: @CurrentMovie.Metascore</span><br />
+    <span>Gross: @CurrentMovie.Gross.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</span><br />
+</div>
+
+@code {
+    [Parameter] public Movie CurrentMovie { get; set; }    
+    [Parameter] public bool Show { get; set; }
+}
