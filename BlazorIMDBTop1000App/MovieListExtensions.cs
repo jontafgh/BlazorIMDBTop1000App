@@ -1,12 +1,43 @@
 ﻿namespace BlazorIMDBTop1000App
 {
-    //DONE
-    //Sort By: SeriesTitle, ReleasedYear, Certificate, Runtime, Genre, IMDBRating, Metascore, Director, NoofVotes, Gross
-    //Search By: SeriesTitle, Director, Overview, Star1, Star2, Star3, Star4
-    //Filter By List Of Options: Certificate, Genre
-    //Filter By Span: ReleasedYear, Runtime, IMDBRating, Metascore, NoofVotes, Gross
     public static class MovieListExtensions
     {
+        public static List<Movie>? Filter(this List<Movie> movies, string filterby, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.Certificate => FilterByCertificate(movies, filterby),
+            MovieProperty.Genre => FilterByGenre(movies, filterby),
+            _ => throw new NotImplementedException()
+        };
+        public static List<Movie>? Filter(this List<Movie> movies, int min, int max, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.Metascore => FilterByMetascore(movies, min, max),
+            MovieProperty.NoofVotes => FilterByNoofVotes(movies, min, max),
+            MovieProperty.Gross => FilterByGross(movies, min, max),
+            _ => throw new NotImplementedException()
+        };
+        public static List<Movie>? Filter(this List<Movie> movies, DateOnly min, DateOnly max, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.ReleasedYear => FilterByReleasedYear(movies, min, max),
+            _ => throw new NotImplementedException()
+        };
+        public static List<Movie>? Filter(this List<Movie> movies, TimeSpan min, TimeSpan max, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.Runtime => FilterByRuntime(movies, min, max),
+            _ => throw new NotImplementedException()
+        };
+        public static List<Movie>? Filter(this List<Movie> movies, float min, float max, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.IMDBRating => FilterByIMDBRating(movies, min, max),
+            _ => throw new NotImplementedException()
+        };
+        public static List<Movie> Search(this List<Movie> movies, string searchTerm, MovieProperty movieProperty) => movieProperty switch
+        {
+            MovieProperty.SeriesTitle => SearchBySeriesTitle(movies, searchTerm),
+            MovieProperty.Director => SearchByDirector(movies, searchTerm),
+            MovieProperty.Overview => SearchByOverview(movies, searchTerm),
+            MovieProperty.Star => SearchByStars(movies, searchTerm),
+            _ => throw new NotImplementedException()
+        };
         public static List<Movie> Sort(this List<Movie> movies, bool sortDirection, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.SeriesTitle => SortBySeriesTitle(movies, sortDirection),
@@ -15,13 +46,13 @@
             MovieProperty.Runtime => SortByRuntime(movies, sortDirection),
             MovieProperty.Genre => SortByGenre(movies, sortDirection),
             MovieProperty.IMDBRating => SortByIMDBRating(movies, sortDirection),
-            MovieProperty.Metascore => SortByMetascore(movies, sortDirection),
+            MovieProperty.Metascore => SortByMetascore(movies, sortDirection), 
             MovieProperty.Director => SortByDirector(movies, sortDirection),
             MovieProperty.NoofVotes => SortByNoofVotes(movies, sortDirection),
             MovieProperty.Gross => SortByGross(movies, sortDirection),
             _ => throw new NotImplementedException()
         };
-        private static List<Movie> FilterByReleaseYear(List<Movie> movies, DateOnly min, DateOnly max) => movies.Where(x => x.ReleasedYear >= min && x.ReleasedYear <= max).ToList();
+        private static List<Movie> FilterByReleasedYear(List<Movie> movies, DateOnly min, DateOnly max) => movies.Where(x => x.ReleasedYear >= min && x.ReleasedYear <= max).ToList();
         private static List<Movie> FilterByRuntime(List<Movie> movies, TimeSpan min, TimeSpan max) => movies.Where(x => x.Runtime >= min && x.Runtime <= max).ToList();
         private static List<Movie> FilterByIMDBRating(List<Movie> movies, float min, float max) => movies.Where(x => x.IMDBRating >= min && x.IMDBRating <= max).ToList();
         private static List<Movie> FilterByMetascore(List<Movie> movies, int min, int max) => movies.Where(x => x.Metascore >= min && x.Metascore <= max).ToList();
