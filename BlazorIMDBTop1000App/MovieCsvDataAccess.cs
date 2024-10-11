@@ -1,6 +1,6 @@
-﻿using CsvHelper.Configuration;
+﻿using CsvHelper;
+using CsvHelper.TypeConversion;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace BlazorIMDBTop1000App
 {
@@ -8,15 +8,22 @@ namespace BlazorIMDBTop1000App
     {
         public List<Movie> GetImdbTop1000Movies()
         {
-            CsvUtilities<Movie> csvUtilities = new CsvUtilities<Movie>();
-
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            using (var reader = new StreamReader("Data/imdb_top_1000.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                PrepareHeaderForMatch = header => Regex.Replace(header.Header, @"_", string.Empty)
-                
-            };
-
-            return csvUtilities.ReadCsv("Data/imdb_top_1000.csv", config).ToList();
+                var records = new List<Movie>();
+                csv.Context.RegisterClassMap<MovieMap>();
+                try
+                {
+                    records = csv.GetRecords<Movie>().ToList();
+                }
+                catch (TypeConverterException ex)
+                {
+                    records.Add(new Movie() { SeriesTitle = ex.Message });
+                }
+                return records;
+            }
         }
     }
+
 }
