@@ -1,6 +1,27 @@
 ﻿@page "/top1000movies"
 @rendermode InteractiveServer
+@using System.Text.RegularExpressions
 <h3>Top1000Movies</h3>
+<b>Sort:</b>
+<br />
+<InputRadioGroup @bind-Value=@_sortDirection @bind-Value:after=Sort>
+    <InputRadio Value="@true"></InputRadio>Descending
+    <InputRadio Value="@false"></InputRadio>Ascending<br />
+</InputRadioGroup>
+<b>Sort By:</b>
+<br />
+<InputRadioGroup @bind-Value="@_sortBy" @bind-Value:after=Sort>
+    <InputRadio Value="MovieProperty.SeriesTitle"></InputRadio>Movie
+    <InputRadio Value="MovieProperty.ReleasedYear"></InputRadio>Released Year
+    <InputRadio Value="MovieProperty.Certificate"></InputRadio>Certificate
+    <InputRadio Value="MovieProperty.Runtime"></InputRadio>Runtime
+    <InputRadio Value="MovieProperty.Genre"></InputRadio>Genre<br />
+    <InputRadio Value="MovieProperty.IMDBRating"></InputRadio>IMDB Rating
+    <InputRadio Value="MovieProperty.Metascore"></InputRadio>Meta Score
+    <InputRadio Value="MovieProperty.Director"></InputRadio>Director
+    <InputRadio Value="MovieProperty.NoOfVotes"></InputRadio>Number Of Votes
+    <InputRadio Value="MovieProperty.Gross"></InputRadio>Gross
+</InputRadioGroup>
 
 <table class="table" style="width:70%">
     <thead>
@@ -8,24 +29,29 @@
             <th>Title</th>
             <th>Year</th>
             <th>Rating</th>
-            <th>Sorter1</th>
-            <th>Show</th>
+            <th>
+                @if (_sortBy != MovieProperty.SeriesTitle && _sortBy != MovieProperty.IMDBRating && _sortBy != MovieProperty.ReleasedYear)
+                {
+                    @string.Join(" ", Regex.Split(_sortBy.ToString(), @"([A-Z]?[a-z]+)").Where(str => !string.IsNullOrEmpty(str)));
+                }
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var movie in _movies)
+        @foreach (var movie in _sortedMovies)
         {
             <tr>
-                <td><b>@movie.Key.SeriesTitle</b></td>
-                <td>@movie.Key.ReleasedYear.ToString("yyyy")</td>
-                <td>@movie.Key.IMDBRating</td>
-                <td>sorter</td>
-                <td><button type="button" @onclick="() => OnShowClick(movie.Key)">Show</button></td>
+                <td width="50%"><b>@movie.SeriesTitle</b></td>
+                <td width="10%">@movie.ReleasedYear.ToString("yyyy")</td>
+                <td width="10%">@movie.IMDBRating</td>
+                <td width="20%">@(SetCurrentSortProperty(_sortBy, movie))</td>
+                <td width="10%"><button type="button" @onclick="() => OnShowClick(movie)">Show</button></td>
             </tr>
-            @if (ShowMovie(movie.Key))
+            @if (ShowMovie(movie))
             {
                 <tr style="align-content:center">
-                    <td colspan="5"><Top1000Movie CurrentMovie="@movie.Key"></Top1000Movie></td>
+                    <td colspan="5"><Top1000Movie CurrentMovie="@movie"></Top1000Movie></td>
                 </tr>
             }
         }
@@ -33,19 +59,48 @@
 </table>
 
 @code {
-    private Dictionary<Movie, bool> _movies = new Dictionary<Movie, bool>();
+    private List<Movie> _movies = new List<Movie>();
+    private List<Movie> _sortedMovies = new List<Movie>();
+    private List<Movie> _shownMovies = new List<Movie>();
+    private MovieProperty _sortBy = MovieProperty.IMDBRating;
+    private bool _sortDirection = false;
 
     protected override void OnInitialized()
     {
         MovieCsvDataAccess movieCsvDataAccess = new MovieCsvDataAccess();
         _movies = movieCsvDataAccess.GetImdbTop1000Movies();
+        _sortedMovies = _movies;
     }
+
     private void OnShowClick(Movie movie)
     {
-        _movies[movie] = (_movies[movie]) ? false : true;
+        if (!_shownMovies.Contains(movie))
+        {
+            _shownMovies.Add(movie);
+        }
+        else
+        {
+            _shownMovies.Remove(movie);
+        }
     }
     private bool ShowMovie(Movie movie)
     {
-        return _movies[movie];
+        return _shownMovies.Contains(movie);
+    }
+    private string? SetCurrentSortProperty(MovieProperty movieProperty, Movie movie) => movieProperty switch
+    {
+        MovieProperty.Certificate => movie.Certificate,
+        MovieProperty.Runtime => movie.Runtime.ToString(),
+        MovieProperty.Genre => movie.Genre,
+        MovieProperty.Metascore => movie.Metascore.ToString(),
+        MovieProperty.Director => movie.Director,
+        MovieProperty.NoOfVotes => movie.NoofVotes.ToString(),
+        MovieProperty.Gross => movie.Gross.ToString(),
+        _ => string.Empty
+    };
+
+    private void Sort()
+    {
+        _sortedMovies = _sortedMovies.Sort(_sortDirection, _sortBy);
     }
 }

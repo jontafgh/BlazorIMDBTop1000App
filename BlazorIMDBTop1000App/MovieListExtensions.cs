@@ -11,7 +11,7 @@
         public static List<Movie>? Filter(this List<Movie> movies, int min, int max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.Metascore => FilterByMetascore(movies, min, max),
-            MovieProperty.NoofVotes => FilterByNoofVotes(movies, min, max),
+            MovieProperty.NoOfVotes => FilterByNoofVotes(movies, min, max),
             MovieProperty.Gross => FilterByGross(movies, min, max),
             _ => throw new NotImplementedException()
         };
@@ -48,7 +48,7 @@
             MovieProperty.IMDBRating => SortByIMDBRating(movies, sortDirection),
             MovieProperty.Metascore => SortByMetascore(movies, sortDirection), 
             MovieProperty.Director => SortByDirector(movies, sortDirection),
-            MovieProperty.NoofVotes => SortByNoofVotes(movies, sortDirection),
+            MovieProperty.NoOfVotes => SortByNoofVotes(movies, sortDirection),
             MovieProperty.Gross => SortByGross(movies, sortDirection),
             _ => throw new NotImplementedException()
         };
@@ -82,6 +82,6 @@
     public enum MovieProperty
     {
         SeriesTitle, ReleasedYear, Certificate, Runtime, Genre, IMDBRating,
-        Overview, Metascore, Director, Star, NoofVotes, Gross
+        Overview, Metascore, Director, Star, NoOfVotes, Gross
     }
 }
