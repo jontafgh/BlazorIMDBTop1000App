@@ -39,34 +39,23 @@
 
 <div class="d-inline-block">
     <p><b>Filter By:</b></p>
-    Year:
-    <br />
-    <input type="range" min="@_releaseYearFilterMin" max="@_releaseYearFilterTo" @bind-value="@_releaseYearFilterFrom" @oninput=OnChangeYearFrom @bind-value:after=OrderMovies />From: @_releaseYearFilterFrom<br />
-    <input type="range" min="@_releaseYearFilterFrom" max="@_releaseYearFilterMax" @bind-value="@_releaseYearFilterTo" @oninput=OnChangeYearTo @bind-value:after=OrderMovies />To: @_releaseYearFilterTo<br />
-    Runtime:
-    <br />
-    <input type="range" min="@_runtimeFilterMin" max="@_runtimeFilterTo" @bind-value="@_runtimeFilterFrom" @oninput=OnChangeRuntimeFrom @bind-value:after=OrderMovies />From: @TimeSpan.FromMinutes(_runtimeFilterFrom)<br />
-    <input type="range" min="@_runtimeFilterFrom" max="@_runtimeFilterMax" @bind-value="@_runtimeFilterTo" @oninput=OnChangeRuntimeTo @bind-value:after=OrderMovies />To: @TimeSpan.FromMinutes(_runtimeFilterTo)<br />
-    Gross:
-    <br />
-    <input type="range" min="@_grossFilterMin" max="@_grossFilterTo" @bind-value="@_grossFilterFrom" @oninput=OnChangeGrossFrom @bind-value:after=OrderMovies />From: @_grossFilterFrom<br />
-    <input type="range" min="@_grossFilterFrom" max="@_grossFilterMax" @bind-value="@_grossFilterTo" @oninput=OnChangeGrossTo @bind-value:after=OrderMovies />To: @_grossFilterTo<br />
+    Year:<br />
+    <FilterSliderPair ValueFrom="@_releaseYearFilterFrom" ValueTo="@_releaseYearFilterTo" ValueFromChanged="@((x) => _releaseYearFilterFrom = (int)x)" ValueToChanged="@((x) => _releaseYearFilterTo = (int)x)" OnValueChange="OrderMovies" />
+    Runtime:<br />
+    <FilterSliderPair IsTimeSpan="true" ValueFrom="@_runtimeFilterFrom" ValueTo="@_runtimeFilterTo" ValueFromChanged="@((x) => _runtimeFilterFrom = (int)x)" ValueToChanged="@((x) => _runtimeFilterTo = (int)x)" OnValueChange="OrderMovies" />
+    Gross:<br />
+    <FilterSliderPair ValueFrom="@_grossFilterFrom" ValueTo="@_grossFilterTo" ValueFromChanged="@((x) => _grossFilterFrom = (int)x)" ValueToChanged="@((x) => _grossFilterTo = (int)x)" OnValueChange="OrderMovies" />
 </div>
 
 <div class="d-inline-block">
     <p><b>Filter By:</b></p>
     IMDB Rating:
     <br />
-    <input type="range" min="@_imdbRatingFilterMin" max="@_imdbRatingFilterTo" step="0.1" @bind-value="@_imdbRatingFilterFrom" @oninput=OnChangeImdbRatingFrom @bind-value:after=OrderMovies />From: @_imdbRatingFilterFrom<br />
-    <input type="range" min="@_imdbRatingFilterFrom" max="@_imdbRatingFilterMax" step="0.1" @bind-value="@_imdbRatingFilterTo" @oninput=OnChangeImdbRatingTo @bind-value:after=OrderMovies />To: @_imdbRatingFilterTo<br />
-    Number of votes:
-    <br />
-    <input type="range" min="@_nooVotesFilterMin" max="@_nooVotesFilterTo" @bind-value="@_nooVotesFilterFrom" @oninput=OnChangeNoOfVotesFrom @bind-value:after=OrderMovies />From: @_nooVotesFilterFrom<br />
-    <input type="range" min="@_nooVotesFilterFrom" max="@_nooVotesFilterMax" @bind-value="@_nooVotesFilterTo" @oninput=OnChangeNoOfVotesTo @bind-value:after=OrderMovies />To: @_nooVotesFilterTo<br />
-    Metascore:
-    <br />
-    <input type="range" min="@_metaScoreFilterMin" max="@_metaScoreFilterTo" @bind-value="@_metaScoreFilterFrom" @oninput=OnChangeMetaScoreFrom @bind-value:after=OrderMovies />From: @_metaScoreFilterFrom<br />
-    <input type="range" min="@_metaScoreFilterFrom" max="@_metaScoreFilterMax" @bind-value="@_metaScoreFilterTo" @oninput=OnChangeMetaScoreTo @bind-value:after=OrderMovies />To: @_metaScoreFilterTo<br />
+    <FilterSliderPair ValueFrom="@_imdbRatingFilterFrom" ValueTo="@_imdbRatingFilterTo" ValueFromChanged="@((x) => _imdbRatingFilterFrom = x)" ValueToChanged="@((x) => _imdbRatingFilterTo = x)" OnValueChange="OrderMovies" />
+    Number of votes:<br />
+    <FilterSliderPair ValueFrom="@_nooVotesFilterFrom" ValueTo="@_nooVotesFilterTo" ValueFromChanged="@((x) => _nooVotesFilterFrom = (int)x)" ValueToChanged="@((x) => _nooVotesFilterTo = (int)x)" OnValueChange="OrderMovies" />
+    Metascore:<br />
+    <FilterSliderPair ValueFrom="@_metaScoreFilterFrom" ValueTo="@_metaScoreFilterTo" ValueFromChanged="@((x) => _metaScoreFilterFrom = (int)x)" ValueToChanged="@((x) => _metaScoreFilterTo = (int)x)" OnValueChange="OrderMovies" />
 </div>
 
 <table class="table" style="width:90%">
@@ -108,33 +97,23 @@
     private List<Movie> _movies = new List<Movie>();
     private List<Movie> _sortedMovies = new List<Movie>();
     private List<Movie> _shownMovies = new List<Movie>();
-    private List<Movie> _filteredMovies = new List<Movie>();
-    private MovieProperty _sortBy = MovieProperty.IMDBRating;
-    private MovieProperty _searchBy = MovieProperty.SeriesTitle;
+
+    private MovieProperty _sortBy = MovieProperty.IMDBRating;  
     private bool _sortDirection = false;
-    private string _serachTerm = "";
-    private int _releaseYearFilterMin;
-    private int _releaseYearFilterMax;
+
+    private MovieProperty _searchBy = MovieProperty.SeriesTitle;
+    private string _serachTerm = string.Empty;
+
     private int _releaseYearFilterFrom;
     private int _releaseYearFilterTo;
-    private int _runtimeFilterMin;
-    private int _runtimeFilterMax;
     private int _runtimeFilterFrom;
     private int _runtimeFilterTo;
-    private int _grossFilterMin;
-    private int _grossFilterMax;
     private int _grossFilterFrom;
     private int _grossFilterTo;
-    private float _imdbRatingFilterMin;
-    private float _imdbRatingFilterMax;
-    private float _imdbRatingFilterFrom;
-    private float _imdbRatingFilterTo;
-    private int _nooVotesFilterMin;
-    private int _nooVotesFilterMax;
+    private double _imdbRatingFilterFrom;
+    private double _imdbRatingFilterTo;
     private int _nooVotesFilterFrom;
     private int _nooVotesFilterTo;
-    private int _metaScoreFilterMin;
-    private int _metaScoreFilterMax;
     private int _metaScoreFilterFrom;
     private int _metaScoreFilterTo;
 
@@ -185,35 +164,23 @@
     }
     private void SetFilters()
     {
-        _releaseYearFilterMin = int.Parse(_movies.OrderBy(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
-        _releaseYearFilterMax = int.Parse(_movies.OrderByDescending(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
-        _releaseYearFilterFrom = _releaseYearFilterMin;
-        _releaseYearFilterTo = _releaseYearFilterMax;
+        _releaseYearFilterFrom = int.Parse(_movies.OrderBy(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
+        _releaseYearFilterTo = int.Parse(_movies.OrderByDescending(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
 
-        _runtimeFilterMin = (int)_movies.OrderBy(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
-        _runtimeFilterMax = (int)_movies.OrderByDescending(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
-        _runtimeFilterFrom = _runtimeFilterMin;
-        _runtimeFilterTo = _runtimeFilterMax;
+        _runtimeFilterFrom = (int)_movies.OrderBy(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
+        _runtimeFilterTo = (int)_movies.OrderByDescending(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
 
-        _grossFilterMin = _movies.OrderBy(x => x.Gross).ToList()[0].Gross;
-        _grossFilterMax = _movies.OrderByDescending(x => x.Gross).ToList()[0].Gross;
-        _grossFilterFrom = _grossFilterMin;
-        _grossFilterTo = _grossFilterMax;
+        _grossFilterFrom = _movies.OrderBy(x => x.Gross).ToList()[0].Gross;
+        _grossFilterTo = _movies.OrderByDescending(x => x.Gross).ToList()[0].Gross;
 
-        _imdbRatingFilterMin = _movies.OrderBy(x => x.IMDBRating).ToList()[0].IMDBRating;
-        _imdbRatingFilterMax = _movies.OrderByDescending(x => x.IMDBRating).ToList()[0].IMDBRating;
-        _imdbRatingFilterFrom = _imdbRatingFilterMin;
-        _imdbRatingFilterTo = _imdbRatingFilterMax;
+        _imdbRatingFilterFrom = _movies.OrderBy(x => x.IMDBRating).ToList()[0].IMDBRating;
+        _imdbRatingFilterTo = _movies.OrderByDescending(x => x.IMDBRating).ToList()[0].IMDBRating;
 
-        _nooVotesFilterMin = _movies.OrderBy(x => x.NoofVotes).ToList()[0].NoofVotes;
-        _nooVotesFilterMax = _movies.OrderByDescending(x => x.NoofVotes).ToList()[0].NoofVotes;
-        _nooVotesFilterFrom = _nooVotesFilterMin;
-        _nooVotesFilterTo = _nooVotesFilterMax;
+        _nooVotesFilterFrom = _movies.OrderBy(x => x.NoofVotes).ToList()[0].NoofVotes;
+        _nooVotesFilterTo = _movies.OrderByDescending(x => x.NoofVotes).ToList()[0].NoofVotes;
 
-        _metaScoreFilterMin = _movies.OrderBy(x => x.Metascore).ToList()[0].Metascore;
-        _metaScoreFilterMax = _movies.OrderByDescending(x => x.Metascore).ToList()[0].Metascore;
-        _metaScoreFilterFrom = _metaScoreFilterMin;
-        _metaScoreFilterTo = _metaScoreFilterMax;
+        _metaScoreFilterFrom = _movies.OrderBy(x => x.Metascore).ToList()[0].Metascore;
+        _metaScoreFilterTo = _movies.OrderByDescending(x => x.Metascore).ToList()[0].Metascore;
     }
     private void OnShowClick(Movie movie)
     {
@@ -232,55 +199,10 @@
     }
     private void OnSearch(ChangeEventArgs e)
     {
-        _serachTerm = e!.Value!.ToString()!;
+        if (e.Value != null)
+        {
+            _serachTerm = e.Value.ToString() ?? string.Empty;
+        }        
         OrderMovies();
-    }
-    private void OnChangeYearFrom(ChangeEventArgs e)
-    {
-        _releaseYearFilterFrom = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeYearTo(ChangeEventArgs e)
-    {
-        _releaseYearFilterTo = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeRuntimeFrom(ChangeEventArgs e)
-    {
-        _runtimeFilterFrom = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeRuntimeTo(ChangeEventArgs e)
-    {
-        _runtimeFilterTo = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeGrossFrom(ChangeEventArgs e)
-    {
-        _grossFilterFrom = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeGrossTo(ChangeEventArgs e)
-    {
-        _grossFilterTo = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeImdbRatingFrom(ChangeEventArgs e)
-    {
-        _imdbRatingFilterFrom = float.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeImdbRatingTo(ChangeEventArgs e)
-    {
-        _imdbRatingFilterTo = float.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeNoOfVotesFrom(ChangeEventArgs e)
-    {
-        _nooVotesFilterFrom = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeNoOfVotesTo(ChangeEventArgs e)
-    {
-        _nooVotesFilterTo = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeMetaScoreFrom(ChangeEventArgs e)
-    {
-        _metaScoreFilterFrom = int.Parse(e.Value!.ToString()!);
-    }
-    private void OnChangeMetaScoreTo(ChangeEventArgs e)
-    {
-        _metaScoreFilterTo = int.Parse(e.Value!.ToString()!);
     }
 }

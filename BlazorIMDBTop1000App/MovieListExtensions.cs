@@ -25,7 +25,7 @@
             MovieProperty.Runtime => FilterByRuntime(movies, min, max),
             _ => throw new NotImplementedException()
         };
-        public static List<Movie>? Filter(this List<Movie> movies, float min, float max, MovieProperty movieProperty) => movieProperty switch
+        public static List<Movie>? Filter(this List<Movie> movies, double min, double max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.IMDBRating => FilterByIMDBRating(movies, min, max),
             _ => throw new NotImplementedException()
@@ -54,7 +54,7 @@
         };
         private static List<Movie> FilterByReleasedYear(List<Movie> movies, DateOnly min, DateOnly max) => movies.Where(x => x.ReleasedYear >= min && x.ReleasedYear <= max).ToList();
         private static List<Movie> FilterByRuntime(List<Movie> movies, TimeSpan min, TimeSpan max) => movies.Where(x => x.Runtime >= min && x.Runtime <= max).ToList();
-        private static List<Movie> FilterByIMDBRating(List<Movie> movies, float min, float max) => movies.Where(x => x.IMDBRating >= min && x.IMDBRating <= max).ToList();
+        private static List<Movie> FilterByIMDBRating(List<Movie> movies, double min, double max) => movies.Where(x => x.IMDBRating >= min && x.IMDBRating <= max).ToList();
         private static List<Movie> FilterByMetascore(List<Movie> movies, int min, int max) => movies.Where(x => x.Metascore >= min && x.Metascore <= max).ToList();
         private static List<Movie> FilterByNoofVotes(List<Movie> movies, int min, int max) => movies.Where(x => x.NoofVotes >= min && x.NoofVotes <= max).ToList();
         private static List<Movie> FilterByGross(List<Movie> movies, int min, int max) => movies.Where(x => x.Gross >= min && x.Gross <= max).ToList();

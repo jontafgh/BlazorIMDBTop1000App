@@ -1,0 +1,64 @@
+﻿<div>
+    <input type="range"
+           min="@_valueMin"
+           max="@ValueTo"
+           step="0.1"
+           @bind-value="@ValueFrom"
+           @oninput="OnChangeFrom"
+           @bind-value:after="AfterDragged" />
+    From: @((!IsTimeSpan) ? ValueFrom : TimeSpan.FromMinutes(ValueFrom))
+    <br />
+
+    <input type="range"
+           min="@ValueFrom"
+           max="@_valueMax"
+           step="0.1"
+           @bind-value="@ValueTo"
+           @oninput="OnChangeTo"
+           @bind-value:after="AfterDragged" />
+    To: @( (!IsTimeSpan) ? ValueTo : TimeSpan.FromMinutes(ValueTo))
+    <br />
+</div>
+
+@code {
+    [Parameter] public double ValueFrom { get; set; }
+    [Parameter] public double ValueTo { get; set; }
+
+    [Parameter] public EventCallback<double> ValueFromChanged { get; set; }
+    [Parameter] public EventCallback<double> ValueToChanged { get; set; }
+
+    [Parameter] public EventCallback OnValueChange { get; set; }
+    [Parameter] public bool IsTimeSpan { get; set; } = false;
+
+    private double _valueMin;
+    private double _valueMax;
+
+    protected override void OnInitialized()
+    {
+        _valueMin = ValueFrom;
+        _valueMax = ValueTo;
+    }
+
+    public void AfterDragged()
+    {
+        OnValueChange.InvokeAsync();
+    }
+
+    private void OnChangeFrom(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            ValueFrom = double.Parse(e.Value.ToString() ?? _valueMin.ToString());
+        }
+        ValueFromChanged.InvokeAsync(ValueFrom);
+    }
+
+    private void OnChangeTo(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            ValueTo = double.Parse(e.Value.ToString() ?? _valueMax.ToString());
+        }        
+        ValueToChanged.InvokeAsync(ValueTo);
+    }
+}

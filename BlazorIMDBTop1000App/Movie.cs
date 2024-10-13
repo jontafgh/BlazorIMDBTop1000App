@@ -13,7 +13,7 @@ namespace BlazorIMDBTop1000App
         public string? Certificate { get; set; }
         public TimeSpan Runtime { get; set; }
         public string? Genre { get; set; }
-        public float IMDBRating { get; set; }
+        public double IMDBRating { get; set; }
         public string? Overview { get; set; }
         public int Metascore { get; set; }
         public string? Director { get; set; }
