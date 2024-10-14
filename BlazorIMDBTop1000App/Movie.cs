@@ -54,6 +54,10 @@ namespace BlazorIMDBTop1000App
             {
                 return dt;
             }
+            else
+            {
+                return new DateOnly(1999, 1, 1);
+            }
             throw new TypeConverterException(this, memberMapData, text, row.Context, "Invalid number format");
         }
     }

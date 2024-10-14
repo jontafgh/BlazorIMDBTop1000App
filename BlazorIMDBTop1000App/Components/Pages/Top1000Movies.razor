@@ -4,61 +4,83 @@
 @using System.Globalization
 <h3>Top1000Movies</h3>
 <div>
-    <b>Sort:</b>
-    <br />
+    <b>Sort:</b><br />
     <InputRadioGroup @bind-Value=@_sortDirection @bind-Value:after=OrderMovies>
-        <InputRadio Value="@true"></InputRadio>Descending
-        <InputRadio Value="@false"></InputRadio>Ascending<br />
+        <InputRadio Value="@true" />Descending
+        <InputRadio Value="@false" />Ascending<br />
     </InputRadioGroup>
-    <b>Sort By:</b>
-    <br />
+    <b>Sort By:</b><br />
     <InputRadioGroup @bind-Value="@_sortBy" @bind-Value:after=OrderMovies>
-        <InputRadio Value="MovieProperty.SeriesTitle"></InputRadio>Movie
-        <InputRadio Value="MovieProperty.ReleasedYear"></InputRadio>Released Year
-        <InputRadio Value="MovieProperty.Certificate"></InputRadio>Certificate
-        <InputRadio Value="MovieProperty.Runtime"></InputRadio>Runtime
-        <InputRadio Value="MovieProperty.Genre"></InputRadio>Genre<br />
-        <InputRadio Value="MovieProperty.IMDBRating"></InputRadio>IMDB Rating
-        <InputRadio Value="MovieProperty.Metascore"></InputRadio>Meta Score
-        <InputRadio Value="MovieProperty.Director"></InputRadio>Director
-        <InputRadio Value="MovieProperty.NoOfVotes"></InputRadio>Number Of Votes
-        <InputRadio Value="MovieProperty.Gross"></InputRadio>Gross
+        <InputRadio Value="MovieProperty.SeriesTitle" />Movie
+        <InputRadio Value="MovieProperty.ReleasedYear" />Released Year
+        <InputRadio Value="MovieProperty.Certificate" />Certificate
+        <InputRadio Value="MovieProperty.Runtime" />Runtime
+        <InputRadio Value="MovieProperty.Genre" />Genre<br />
+        <InputRadio Value="MovieProperty.IMDBRating" />IMDB Rating
+        <InputRadio Value="MovieProperty.Metascore" />Meta Score
+        <InputRadio Value="MovieProperty.Director" />Director
+        <InputRadio Value="MovieProperty.NoOfVotes" />Number Of Votes
+        <InputRadio Value="MovieProperty.Gross" />Gross
     </InputRadioGroup>
 </div>
 
 <div>
-    <b>Search By:</b>
-    <br />
+    <b>Search By:</b><br />
     <InputRadioGroup @bind-Value="@_searchBy">
-        <InputRadio Value="MovieProperty.SeriesTitle"></InputRadio>Movie
-        <InputRadio Value="MovieProperty.Director"></InputRadio>Director
-        <InputRadio Value="MovieProperty.Star"></InputRadio>Actors
+        <InputRadio Value="MovieProperty.SeriesTitle" />Movie
+        <InputRadio Value="MovieProperty.Director" />Director
+        <InputRadio Value="MovieProperty.Star" />Actors
     </InputRadioGroup>
     <InputText @bind-Value=@_serachTerm @oninput=OnSearch></InputText>
 </div>
+@if (_filter != null)
+{
+    <div class="d-inline-block">
+        <p><b>Filter By:</b></p>
+        Year:<br />
+        <FilterSliderPair ValueFrom="@_filter.ReleasedYear.From"
+                          ValueTo="@_filter.ReleasedYear.To"
+                          ValueFromChanged="@((x) => _filter.ReleasedYear.From = (int)x)"
+                          ValueToChanged="@((x) => _filter.ReleasedYear.To = (int)x)"
+                          OnValueChange="OrderMovies" />
+        Runtime:<br />
+        <FilterSliderPair IsTimeSpan="true"
+                          ValueFrom="@_filter.Runtime.From"
+                          ValueTo="@_filter.Runtime.To"
+                          ValueFromChanged="@((x) => _filter.Runtime.From = (int)x)"
+                          ValueToChanged="@((x) => _filter.Runtime.To = (int)x)"
+                          OnValueChange="OrderMovies" />
+        Gross:<br />
+        <FilterSliderPair ValueFrom="@_filter.Gross.From"
+                          ValueTo="@_filter.Gross.To"
+                          ValueFromChanged="@((x) => _filter.Gross.From = (int)x)"
+                          ValueToChanged="@((x) => _filter.Gross.To = (int)x)"
+                          OnValueChange="OrderMovies" />
+    </div>
 
-<div class="d-inline-block">
-    <p><b>Filter By:</b></p>
-    Year:<br />
-    <FilterSliderPair ValueFrom="@_releaseYearFilterFrom" ValueTo="@_releaseYearFilterTo" ValueFromChanged="@((x) => _releaseYearFilterFrom = (int)x)" ValueToChanged="@((x) => _releaseYearFilterTo = (int)x)" OnValueChange="OrderMovies" />
-    Runtime:<br />
-    <FilterSliderPair IsTimeSpan="true" ValueFrom="@_runtimeFilterFrom" ValueTo="@_runtimeFilterTo" ValueFromChanged="@((x) => _runtimeFilterFrom = (int)x)" ValueToChanged="@((x) => _runtimeFilterTo = (int)x)" OnValueChange="OrderMovies" />
-    Gross:<br />
-    <FilterSliderPair ValueFrom="@_grossFilterFrom" ValueTo="@_grossFilterTo" ValueFromChanged="@((x) => _grossFilterFrom = (int)x)" ValueToChanged="@((x) => _grossFilterTo = (int)x)" OnValueChange="OrderMovies" />
-</div>
-
-<div class="d-inline-block">
-    <p><b>Filter By:</b></p>
-    IMDB Rating:
-    <br />
-    <FilterSliderPair ValueFrom="@_imdbRatingFilterFrom" ValueTo="@_imdbRatingFilterTo" ValueFromChanged="@((x) => _imdbRatingFilterFrom = x)" ValueToChanged="@((x) => _imdbRatingFilterTo = x)" OnValueChange="OrderMovies" />
-    Number of votes:<br />
-    <FilterSliderPair ValueFrom="@_nooVotesFilterFrom" ValueTo="@_nooVotesFilterTo" ValueFromChanged="@((x) => _nooVotesFilterFrom = (int)x)" ValueToChanged="@((x) => _nooVotesFilterTo = (int)x)" OnValueChange="OrderMovies" />
-    Metascore:<br />
-    <FilterSliderPair ValueFrom="@_metaScoreFilterFrom" ValueTo="@_metaScoreFilterTo" ValueFromChanged="@((x) => _metaScoreFilterFrom = (int)x)" ValueToChanged="@((x) => _metaScoreFilterTo = (int)x)" OnValueChange="OrderMovies" />
-</div>
-
-<table class="table" style="width:90%">
+    <div class="d-inline-block">
+        <p><b>Filter By:</b></p>
+        IMDB Rating:<br />
+        <FilterSliderPair ValueFrom="@_filter.ImdbRating.From"
+                          ValueTo="@_filter.ImdbRating.To"
+                          ValueFromChanged="@((x) => _filter.ImdbRating.From = x)"
+                          ValueToChanged="@((x) => _filter.ImdbRating.To = x)"
+                          OnValueChange="OrderMovies" />
+        Number of votes:<br />
+        <FilterSliderPair ValueFrom="@_filter.NoOfVotes.From"
+                          ValueTo="@_filter.NoOfVotes.To"
+                          ValueFromChanged="@((x) => _filter.NoOfVotes.From = (int)x)"
+                          ValueToChanged="@((x) => _filter.NoOfVotes.To = (int)x)"
+                          OnValueChange="OrderMovies" />
+        Metascore:<br />
+        <FilterSliderPair ValueFrom="@_filter.MetaScore.From"
+                          ValueTo="@_filter.MetaScore.To"
+                          ValueFromChanged="@((x) => _filter.MetaScore.From = (int)x)"
+                          ValueToChanged="@((x) => _filter.MetaScore.To = (int)x)"
+                          OnValueChange="OrderMovies" />
+    </div>
+}
+<table class="table" style="width:100%">
     <thead>
         <tr>
             <th>Title</th>
@@ -70,6 +92,12 @@
                     @(SetCurrentSortPropertyTitle(_sortBy))
                 }
             </th>
+            <th>
+                @if (_searchBy == MovieProperty.Star)
+                {
+                    @("Actors")
+                }
+            </th>
             <th><button type="button" @onclick=OnHideAllClick>Hide All</button></th>
         </tr>
     </thead>
@@ -77,10 +105,17 @@
         @foreach (var movie in _sortedMovies)
         {
             <tr>
-                <td width="50%"><b>@movie.SeriesTitle</b></td>
+                <td width="30%"><b>@movie.SeriesTitle</b></td>
                 <td width="10%">@movie.ReleasedYear.ToString("yyyy")</td>
                 <td width="10%">@movie.IMDBRating</td>
                 <td width="20%">@(SetCurrentSortProperty(_sortBy, movie))</td>
+                <td width="20%">
+                    @if (_searchBy == MovieProperty.Star)
+                    {
+                        @(SetActorsInMovie(movie)[0])<br />
+                        @(SetActorsInMovie(movie)[1])
+                    }
+                </td>
                 <td width="10%"><button type="button" @onclick="() => OnShowClick(movie)">Show</button></td>
             </tr>
             @if (_shownMovies.Contains(movie))
@@ -97,31 +132,19 @@
     private List<Movie> _movies = new List<Movie>();
     private List<Movie> _sortedMovies = new List<Movie>();
     private List<Movie> _shownMovies = new List<Movie>();
+    private ImdbTop1000Filter? _filter;
 
-    private MovieProperty _sortBy = MovieProperty.IMDBRating;  
+    private MovieProperty _sortBy = MovieProperty.IMDBRating;
     private bool _sortDirection = false;
 
     private MovieProperty _searchBy = MovieProperty.SeriesTitle;
     private string _serachTerm = string.Empty;
 
-    private int _releaseYearFilterFrom;
-    private int _releaseYearFilterTo;
-    private int _runtimeFilterFrom;
-    private int _runtimeFilterTo;
-    private int _grossFilterFrom;
-    private int _grossFilterTo;
-    private double _imdbRatingFilterFrom;
-    private double _imdbRatingFilterTo;
-    private int _nooVotesFilterFrom;
-    private int _nooVotesFilterTo;
-    private int _metaScoreFilterFrom;
-    private int _metaScoreFilterTo;
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         MovieCsvDataAccess movieCsvDataAccess = new MovieCsvDataAccess();
-        _movies = movieCsvDataAccess.GetImdbTop1000Movies();
-        SetFilters();
+        _movies = await movieCsvDataAccess.GetImdbTop1000MoviesAsync();
+        _filter = new ImdbTop1000Filter(_movies);
         OrderMovies();
     }
     private string? SetCurrentSortProperty(MovieProperty movieProperty, Movie movie) => movieProperty switch
@@ -139,6 +162,10 @@
     {
         return string.Join(" ", Regex.Split(_sortBy.ToString(), @"([A-Z]?[a-z]+)").Where(str => !string.IsNullOrEmpty(str)));
     }
+    public string[] SetActorsInMovie(Movie movie)
+    {
+        return [$"{movie.Star1}, {movie.Star2}", $"{movie.Star3}, {movie.Star4}"];
+    }
     private void OrderMovies()
     {
         Sort();
@@ -155,32 +182,15 @@
     }
     private void Filter()
     {
-        _sortedMovies = _sortedMovies.Filter(DateOnly.ParseExact(_releaseYearFilterFrom.ToString(), "yyyy"), DateOnly.ParseExact(_releaseYearFilterTo.ToString(), "yyyy"), MovieProperty.ReleasedYear)!;
-        _sortedMovies = _sortedMovies.Filter(TimeSpan.FromMinutes(_runtimeFilterFrom), TimeSpan.FromMinutes(_runtimeFilterTo), MovieProperty.Runtime)!;
-        _sortedMovies = _sortedMovies.Filter(_grossFilterFrom, _grossFilterTo, MovieProperty.Gross)!;
-        _sortedMovies = _sortedMovies.Filter(_imdbRatingFilterFrom, _imdbRatingFilterTo, MovieProperty.IMDBRating)!;
-        _sortedMovies = _sortedMovies.Filter(_nooVotesFilterFrom, _nooVotesFilterTo, MovieProperty.NoOfVotes)!;
-        _sortedMovies = _sortedMovies.Filter(_metaScoreFilterFrom, _metaScoreFilterTo, MovieProperty.Metascore)!;
-    }
-    private void SetFilters()
-    {
-        _releaseYearFilterFrom = int.Parse(_movies.OrderBy(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
-        _releaseYearFilterTo = int.Parse(_movies.OrderByDescending(x => x.ReleasedYear).ToList()[0].ReleasedYear.ToString("yyyy"));
-
-        _runtimeFilterFrom = (int)_movies.OrderBy(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
-        _runtimeFilterTo = (int)_movies.OrderByDescending(x => x.Runtime).ToList()[0].Runtime.TotalMinutes;
-
-        _grossFilterFrom = _movies.OrderBy(x => x.Gross).ToList()[0].Gross;
-        _grossFilterTo = _movies.OrderByDescending(x => x.Gross).ToList()[0].Gross;
-
-        _imdbRatingFilterFrom = _movies.OrderBy(x => x.IMDBRating).ToList()[0].IMDBRating;
-        _imdbRatingFilterTo = _movies.OrderByDescending(x => x.IMDBRating).ToList()[0].IMDBRating;
-
-        _nooVotesFilterFrom = _movies.OrderBy(x => x.NoofVotes).ToList()[0].NoofVotes;
-        _nooVotesFilterTo = _movies.OrderByDescending(x => x.NoofVotes).ToList()[0].NoofVotes;
-
-        _metaScoreFilterFrom = _movies.OrderBy(x => x.Metascore).ToList()[0].Metascore;
-        _metaScoreFilterTo = _movies.OrderByDescending(x => x.Metascore).ToList()[0].Metascore;
+        if (_filter != null)
+        {
+            _sortedMovies = _sortedMovies.Filter(DateOnly.ParseExact(_filter.ReleasedYear.From.ToString(), "yyyy"), DateOnly.ParseExact(_filter.ReleasedYear.To.ToString(), "yyyy"), MovieProperty.ReleasedYear)!;
+            _sortedMovies = _sortedMovies.Filter(TimeSpan.FromMinutes(_filter.Runtime.From), TimeSpan.FromMinutes(_filter.Runtime.To), MovieProperty.Runtime)!;
+            _sortedMovies = _sortedMovies.Filter(_filter.Gross.From, _filter.Gross.To, MovieProperty.Gross)!;
+            _sortedMovies = _sortedMovies.Filter(_filter.ImdbRating.From, _filter.ImdbRating.To, MovieProperty.IMDBRating)!;
+            _sortedMovies = _sortedMovies.Filter(_filter.NoOfVotes.From, _filter.NoOfVotes.To, MovieProperty.NoOfVotes)!;
+            _sortedMovies = _sortedMovies.Filter(_filter.MetaScore.From, _filter.MetaScore.To, MovieProperty.Metascore)!;
+        }
     }
     private void OnShowClick(Movie movie)
     {
@@ -202,7 +212,7 @@
         if (e.Value != null)
         {
             _serachTerm = e.Value.ToString() ?? string.Empty;
-        }        
+        }
         OrderMovies();
     }
 }
