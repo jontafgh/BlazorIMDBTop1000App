@@ -30,8 +30,7 @@ namespace BlazorIMDBTop1000App
             {
                 List<Movie> movies = new List<Movie>();
                 csv.Context.RegisterClassMap<MovieMap>();
-                var records = csv.GetRecordsAsync<Movie>();
-                await foreach (var record in records)
+                await foreach (var record in csv.GetRecordsAsync<Movie>())
                 {
                     movies.Add(record);
                 }

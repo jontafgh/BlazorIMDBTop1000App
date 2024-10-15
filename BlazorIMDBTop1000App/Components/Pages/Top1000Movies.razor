@@ -80,6 +80,24 @@
                           OnValueChange="OrderMovies" />
     </div>
 }
+
+@if (_genres != null)
+{
+    <div class="form-check-inline">
+        <p><b>Filter by genres:</b></p>
+        <button @onclick="UncheckAllGenres">Uncheck All</button><br />
+        <ul style="column-count: 2;">
+            @foreach (var genre in _genres)
+            {
+                <li>
+                    <label>@genre.Key</label>
+                    <input type="checkbox" @bind-value=_genres[genre.Key] @bind-value:after=OrderMovies checked="@_genres[genre.Key]" />
+                </li>
+            }
+        </ul>
+    </div>
+}
+
 <table class="table" style="width:100%">
     <thead>
         <tr>
@@ -112,7 +130,9 @@
                 <td width="20%">
                     @if (_searchBy == MovieProperty.Star)
                     {
-                        @(SetActorsInMovie(movie)[0])<br />
+                        @(SetActorsInMovie(movie)[0])
+
+                        <br />
                         @(SetActorsInMovie(movie)[1])
                     }
                 </td>
@@ -140,11 +160,14 @@
     private MovieProperty _searchBy = MovieProperty.SeriesTitle;
     private string _serachTerm = string.Empty;
 
+    private Dictionary<string, bool>? _genres;
+
     protected override async Task OnInitializedAsync()
     {
         MovieCsvDataAccess movieCsvDataAccess = new MovieCsvDataAccess();
         _movies = await movieCsvDataAccess.GetImdbTop1000MoviesAsync();
         _filter = new ImdbTop1000Filter(_movies);
+        _genres = _movies.GetGeneres();
         OrderMovies();
     }
     private string? SetCurrentSortProperty(MovieProperty movieProperty, Movie movie) => movieProperty switch
@@ -190,6 +213,7 @@
             _sortedMovies = _sortedMovies.Filter(_filter.ImdbRating.From, _filter.ImdbRating.To, MovieProperty.IMDBRating)!;
             _sortedMovies = _sortedMovies.Filter(_filter.NoOfVotes.From, _filter.NoOfVotes.To, MovieProperty.NoOfVotes)!;
             _sortedMovies = _sortedMovies.Filter(_filter.MetaScore.From, _filter.MetaScore.To, MovieProperty.Metascore)!;
+            _sortedMovies = _sortedMovies.FilterByGenre(_genres);
         }
     }
     private void OnShowClick(Movie movie)
@@ -212,6 +236,14 @@
         if (e.Value != null)
         {
             _serachTerm = e.Value.ToString() ?? string.Empty;
+        }
+        OrderMovies();
+    }
+    private void UncheckAllGenres(MouseEventArgs e)
+    {
+        foreach (var genre in _genres!)
+        {
+            _genres[genre.Key] = false;
         }
         OrderMovies();
     }
