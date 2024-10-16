@@ -2,27 +2,27 @@
 {
     public static class MovieListExtensions
     {
-        public static List<Movie>? Filter(this List<Movie> movies, int min, int max, MovieProperty movieProperty) => movieProperty switch
+        public static List<Movie> Filter(this List<Movie> movies, int min, int max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.Metascore => FilterByMetascore(movies, min, max),
             MovieProperty.NoOfVotes => FilterByNoofVotes(movies, min, max),
             MovieProperty.Gross => FilterByGross(movies, min, max),
-            _ => throw new NotImplementedException()
+            _ => FilterByGross(movies, min, max)
         };
-        public static List<Movie>? Filter(this List<Movie> movies, DateOnly min, DateOnly max, MovieProperty movieProperty) => movieProperty switch
+        public static List<Movie> Filter(this List<Movie> movies, DateOnly min, DateOnly max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.ReleasedYear => FilterByReleasedYear(movies, min, max),
-            _ => throw new NotImplementedException()
+            _ => FilterByReleasedYear(movies, min, max)
         };
-        public static List<Movie>? Filter(this List<Movie> movies, TimeSpan min, TimeSpan max, MovieProperty movieProperty) => movieProperty switch
+        public static List<Movie> Filter(this List<Movie> movies, TimeSpan min, TimeSpan max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.Runtime => FilterByRuntime(movies, min, max),
-            _ => throw new NotImplementedException()
+            _ => FilterByRuntime(movies, min, max)
         };
-        public static List<Movie>? Filter(this List<Movie> movies, double min, double max, MovieProperty movieProperty) => movieProperty switch
+        public static List<Movie> Filter(this List<Movie> movies, double min, double max, MovieProperty movieProperty) => movieProperty switch
         {
             MovieProperty.IMDBRating => FilterByIMDBRating(movies, min, max),
-            _ => throw new NotImplementedException()
+            _ => FilterByIMDBRating(movies, min, max)
         };
         public static List<Movie> Search(this List<Movie> movies, string searchTerm, MovieProperty movieProperty) => movieProperty switch
         {
@@ -30,7 +30,7 @@
             MovieProperty.Director => SearchByDirector(movies, searchTerm),
             MovieProperty.Overview => SearchByOverview(movies, searchTerm),
             MovieProperty.Star => SearchByStars(movies, searchTerm),
-            _ => throw new NotImplementedException()
+            _ => SearchBySeriesTitle(movies, searchTerm)
         };
         public static List<Movie> Sort(this List<Movie> movies, bool sortDirection, MovieProperty movieProperty) => movieProperty switch
         {
@@ -44,7 +44,7 @@
             MovieProperty.Director => SortByDirector(movies, sortDirection),
             MovieProperty.NoOfVotes => SortByNoofVotes(movies, sortDirection),
             MovieProperty.Gross => SortByGross(movies, sortDirection),
-            _ => throw new NotImplementedException()
+            _ => SortByIMDBRating(movies, sortDirection)
         };
         public static Dictionary<string, bool> GetGeneres(this List<Movie> movies) => string.Join("\"", movies.Select(x => x.Genre)).Split(["\"", ", "], StringSplitOptions.RemoveEmptyEntries).Distinct().ToDictionary(x => x, x => false);
         private static List<Movie> FilterByReleasedYear(List<Movie> movies, DateOnly min, DateOnly max) => movies.Where(x => x.ReleasedYear >= min && x.ReleasedYear <= max).ToList();
@@ -53,8 +53,7 @@
         private static List<Movie> FilterByMetascore(List<Movie> movies, int min, int max) => movies.Where(x => x.Metascore >= min && x.Metascore <= max).ToList();
         private static List<Movie> FilterByNoofVotes(List<Movie> movies, int min, int max) => movies.Where(x => x.NoofVotes >= min && x.NoofVotes <= max).ToList();
         private static List<Movie> FilterByGross(List<Movie> movies, int min, int max) => movies.Where(x => x.Gross >= min && x.Gross <= max).ToList();
-        private static List<Movie>? FilterByCertificate(List<Movie> movies, string certificate) => movies.GroupBy(x => x.Certificate).FirstOrDefault(x => x.Key == certificate)?.ToList();
-        public static List<Movie>? FilterByGenre(this List<Movie> movies, Dictionary<string, bool> genres) => movies.Where(m => genres.Where(g => g.Value).All(g => m.Genre!.Contains(g.Key))).ToList();
+        public static List<Movie> FilterByGenre(this List<Movie> movies, Dictionary<string, bool> genres) => movies.Where(m => genres.Where(g => g.Value).All(g => m.Genre!.Contains(g.Key))).ToList();
         private static List<Movie> SearchBySeriesTitle(List<Movie> movies, string searchTerm) => movies.Where(x => x.SeriesTitle!.Contains(searchTerm.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToList();
         private static List<Movie> SearchByDirector(List<Movie> movies, string searchTerm) => movies.Where(x => x.Director!.Contains(searchTerm.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToList();
         private static List<Movie> SearchByOverview(List<Movie> movies, string searchTerm) => movies.Where(x => x.Overview!.Contains(searchTerm.ToLower().Trim(), StringComparison.CurrentCultureIgnoreCase)).ToList();

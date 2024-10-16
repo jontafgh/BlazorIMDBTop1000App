@@ -205,14 +205,14 @@
     }
     private void Filter()
     {
-        if (_filter != null)
+        if (_filter != null && _genres != null)
         {
-            _sortedMovies = _sortedMovies.Filter(DateOnly.ParseExact(_filter.ReleasedYear.From.ToString(), "yyyy"), DateOnly.ParseExact(_filter.ReleasedYear.To.ToString(), "yyyy"), MovieProperty.ReleasedYear)!;
-            _sortedMovies = _sortedMovies.Filter(TimeSpan.FromMinutes(_filter.Runtime.From), TimeSpan.FromMinutes(_filter.Runtime.To), MovieProperty.Runtime)!;
-            _sortedMovies = _sortedMovies.Filter(_filter.Gross.From, _filter.Gross.To, MovieProperty.Gross)!;
-            _sortedMovies = _sortedMovies.Filter(_filter.ImdbRating.From, _filter.ImdbRating.To, MovieProperty.IMDBRating)!;
-            _sortedMovies = _sortedMovies.Filter(_filter.NoOfVotes.From, _filter.NoOfVotes.To, MovieProperty.NoOfVotes)!;
-            _sortedMovies = _sortedMovies.Filter(_filter.MetaScore.From, _filter.MetaScore.To, MovieProperty.Metascore)!;
+            _sortedMovies = _sortedMovies.Filter(DateOnly.ParseExact(_filter.ReleasedYear.From.ToString(), "yyyy"), DateOnly.ParseExact(_filter.ReleasedYear.To.ToString(), "yyyy"), MovieProperty.ReleasedYear);
+            _sortedMovies = _sortedMovies.Filter(TimeSpan.FromMinutes(_filter.Runtime.From), TimeSpan.FromMinutes(_filter.Runtime.To), MovieProperty.Runtime);
+            _sortedMovies = _sortedMovies.Filter(_filter.Gross.From, _filter.Gross.To, MovieProperty.Gross);
+            _sortedMovies = _sortedMovies.Filter(_filter.ImdbRating.From, _filter.ImdbRating.To, MovieProperty.IMDBRating);
+            _sortedMovies = _sortedMovies.Filter(_filter.NoOfVotes.From, _filter.NoOfVotes.To, MovieProperty.NoOfVotes);
+            _sortedMovies = _sortedMovies.Filter(_filter.MetaScore.From, _filter.MetaScore.To, MovieProperty.Metascore);
             _sortedMovies = _sortedMovies.FilterByGenre(_genres);
         }
     }
